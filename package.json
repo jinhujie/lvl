@@ -1,0 +1,16 @@
+{
+  "name": "lightweight-vue-ligo",
+  "version": "0.0.1",
+  "description": "generate html page by ligo",
+  "main": "index.js",
+  "author": "jinhujie",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
