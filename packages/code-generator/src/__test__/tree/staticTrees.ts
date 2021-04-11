@@ -1,7 +1,7 @@
-const cases = [ {
-  desc: '',
-  tree: [{ name: 'div' }],
-} ];
+export const basicTree =  [{
+  name: 'div',
+  children: null,
+}] ;
 
 const node = [
   { 
@@ -22,4 +22,3 @@ const node = [
     ],
   }
 ]
-exports = cases;
