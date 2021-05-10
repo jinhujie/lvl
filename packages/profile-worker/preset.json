@@ -1,0 +1,6 @@
+{
+  "vueVersion": "2",
+  "packageManager": "npm",
+  "usetaobaoRegistry": true,
+  "plugins": {}
+}
