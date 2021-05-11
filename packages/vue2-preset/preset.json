@@ -1,0 +1,10 @@
+{
+  "vueVersion": "2",
+  "packageManager": "npm",
+  "usetaobaoRegistry": true,
+  "plugins": {
+    "@vue/cli-plugin-babel": {
+      "prompts": false
+    }
+  }
+}

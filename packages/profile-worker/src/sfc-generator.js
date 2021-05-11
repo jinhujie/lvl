@@ -9,7 +9,7 @@ function generateSFC (roots) {
 
   multiMarkClassName(roots);
   sfc += `<template>${extractTemplates(roots)}</template>`;
-  sfc += defaultScript;
+  sfc += (new ScriptParser(roots).getStringifyScripts() || defaultScript);
   sfc += `<style>${extractRootsStyle(roots)}</style>`;
 
   return sfc;
@@ -134,6 +134,59 @@ function stringifyStyle (node) {
   return `.${className}{
     ${stringifiedStyles}
   }`
+}
+
+const Trigger = require('./trigger');
+// const _ = require('lodash/core');
+
+class ScriptParser{
+  constructor(roots){
+    this.roots = roots;
+    this.stringifyScripts = '';
+    this.parsedVueOptions = {}
+  }
+  getStringifyScripts(){
+    this.roots.forEach(root => this.parseDFS(root));
+
+    return `<script>export default ${this.stringifyObject(this.parsedVueOptions)}</script>`
+  }
+  stringifyObject(vueOptions) {
+    // TODO: hard code
+    // this part may be palced in `trigger.js`
+    const optionNames = Object.keys(vueOptions);
+    const stringifyOptions = optionNames.map((optionName) => {
+      return `${optionName}(){${vueOptions[optionName]}}`;
+    }).join('');
+    return `{${stringifyOptions}}`;
+  }
+  parseDFS(root){
+    if (root) {
+      this.parseTrigger(root);
+      if (root.children) {
+        root.children.forEach(child =>  this.parseDFS(child));
+      }
+    }
+  }
+  parseTrigger(astNode) {
+    const triggers = astNode.trigger;
+    if (triggers) {
+      triggers.forEach(({ id, props = {} }) => {
+        const codeSnippet = new Trigger(id, props).generateCode();
+        const lifecircleMap = {
+          [Trigger.TRIGGER_VUE_CREATED]: 'created',
+        };
+        const correspondLifecircle = lifecircleMap[id];
+        // add genration to target
+
+        if (!this.parsedVueOptions[correspondLifecircle]) {
+          this.parsedVueOptions[correspondLifecircle] = [];
+        }
+        this.parsedVueOptions[correspondLifecircle].push(codeSnippet);
+      })
+    } else {
+      return false;
+    }
+  }
 }
 
 module.exports = {
