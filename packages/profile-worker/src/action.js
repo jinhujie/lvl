@@ -1,4 +1,3 @@
-
 class RuntimeAction{
   constructor(id, props = {}) {
     this.id = id;
